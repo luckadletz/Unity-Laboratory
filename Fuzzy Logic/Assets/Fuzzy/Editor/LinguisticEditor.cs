@@ -195,7 +195,7 @@ public class LinguisticEditor : Editor
     {
         float deltaHue = 1.0f / max;
 
-        return EditorGUIUtility.HSVToRGB(index * deltaHue, 1.0f, 1.0f);
+        return Color.HSVToRGB(index * deltaHue, 1.0f, 1.0f);
     }
 }
 
