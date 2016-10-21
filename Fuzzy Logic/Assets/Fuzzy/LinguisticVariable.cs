@@ -16,7 +16,7 @@ public class LinguisticVariable : MonoBehaviour
     public class Term
     {
         public string name;
-        public TrapezoidFuzzyNumber values;
+        public TriangleFuzzyNumber values;
     }
 
     public Term[] terms;

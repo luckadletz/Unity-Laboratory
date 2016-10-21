@@ -34,6 +34,7 @@ public struct FuzzyOutput
     }
 }
 
+
 public interface IFuzzy : ICloneable
 {
     //// Leftmost value for which Membership(x) == 1
@@ -47,10 +48,64 @@ public interface IFuzzy : ICloneable
     // Evaluates the membership of a number at the given value
     FuzzyOutput Membership(float input);
 
-    AnimationCurve GetCurve();
+
     // NOTE I might want to add COG / COA here
     // NOTE Maybe get r+ and r- delegates might also be useful?
 }
+
+[System.Serializable]
+public class TrapezoidFuzzyNumber : IFuzzy
+{
+    public float 
+        close_left, 
+        core_left, 
+        core_right, 
+        close_right;
+
+    float IFuzzy.close_left
+    { get { return close_left; } }
+
+    float IFuzzy.close_right
+    { get { return close_right; } }
+
+    public TrapezoidFuzzyNumber(float a0, float a1, float b1, float b0)
+    {
+        close_left = a0;
+        core_left = a1;
+        core_right = b1;
+        close_right = b0;
+    }
+
+    public object Clone()
+    {
+        return new TrapezoidFuzzyNumber(close_left, core_left, core_right, close_right);
+    }
+
+
+    override public string ToString()
+    {
+        return "(" + close_left + ", "
+            + core_left + ", "
+            + core_right + ", "
+            + close_right + ")";
+    }
+
+    public FuzzyOutput Membership(float input)
+    {
+        // Check outside number
+        if (input <= close_left || input >= close_right)
+            return 0;
+        // Check inside core
+        else if (input >= core_left && input <= core_right)
+            return 1;
+        // Check left slope
+        else if (input < core_left)
+            return (input - close_left) / (core_left-close_left);
+        // Check right slope
+        else // if (input > core_right)
+            return (close_right - input) / (close_right- core_right);
+    }
+};
 
 [System.Serializable]
 public class TriangleFuzzyNumber : IFuzzy
@@ -95,113 +150,6 @@ public class TriangleFuzzyNumber : IFuzzy
             + close_right + ")";
     }
 
-    public AnimationCurve GetCurve()
-    {
-        AnimationCurve curve = new AnimationCurve();
-
-        // Compute slopes
-        float l = 1.0f / (core - close_left);
-        float r = -1.0f / (close_right - core);
-
-        Keyframe left = new Keyframe(close_left, 0.0f);
-        left.outTangent = l;
-        curve.AddKey(left);
-
-        Keyframe mid = new Keyframe(core, 1.0f);
-        mid.inTangent = l;
-        mid.outTangent = r;
-        curve.AddKey(mid);
-
-        Keyframe right = new Keyframe(close_right, 0.0f);
-        right.inTangent = r;
-        curve.AddKey(right);
-
-        return curve;
-    }
-};
-
-[System.Serializable]
-public class TrapezoidFuzzyNumber : IFuzzy
-{
-    public float 
-        close_left, 
-        core_left, 
-        core_right, 
-        close_right;
-
-    float IFuzzy.close_left
-    { get { return close_left; } }
-
-    float IFuzzy.close_right
-    { get { return close_right; } }
-
-    public TrapezoidFuzzyNumber(float a0, float a1, float b1, float b0)
-    {
-        close_left = a0;
-        core_left = a1;
-        core_right = b1;
-        close_right = b0;
-    }
-
-    public object Clone()
-    {
-        return new TrapezoidFuzzyNumber(close_left, core_left, core_right, close_right);
-    }
-
-    override public string ToString()
-    {
-        return "(" + close_left + ", "
-            + core_left + ", "
-            + core_right + ", "
-            + close_right + ")";
-    }
-
-    public FuzzyOutput Membership(float input)
-    {
-        // Check outside number
-        if (input <= close_left || input >= close_right)
-            return 0;
-        // Check inside core
-        else if (input >= core_left && input <= core_right)
-            return 1;
-        // Check left slope
-        else if (input < core_left)
-            return (input - close_left) / (core_left-close_left);
-        // Check right slope
-        else // if (input > core_right)
-            return (close_right - input) / (close_right- core_right);
-    }
-
-    public AnimationCurve GetCurve()
-    {
-        AnimationCurve curve = new AnimationCurve();
-
-        // Compute slopes
-        float l = 1.0f / (core_left - close_left);
-        float r = -1.0f / (close_right - core_right);
-        
-        Keyframe closeLeftKey = new Keyframe(close_left, 0.0f);
-        closeLeftKey.inTangent = 0f;
-        closeLeftKey.outTangent = l;
-        curve.AddKey(closeLeftKey);
-
-        Keyframe coreLeftKey = new Keyframe(core_left, 1.0f);
-        coreLeftKey.inTangent = l;
-        //coreLeftKey.outTangent = 0f;
-        curve.AddKey(coreLeftKey);
-
-        Keyframe coreRightKey = new Keyframe(core_right, 1.0f);
-        //coreRightKey.inTangent = 0f;
-        coreRightKey.outTangent = r;
-        curve.AddKey(coreRightKey);
-
-        Keyframe closeRightKey = new Keyframe(close_right, 0.0f);
-        closeRightKey.inTangent = r;
-        closeRightKey.outTangent = 0f;
-        curve.AddKey(closeRightKey);
-
-        return curve;
-    }
 };
 
 // Declare delegate signature
@@ -215,11 +163,8 @@ public class DelegateFuzzy : IFuzzy
 
     float IFuzzy.close_right
     { get { return close_right; } }
-
     public delegate FuzzyOutput MembershipDelegate(float x);
-
     MembershipDelegate D;
-
     public DelegateFuzzy(MembershipDelegate d, float left, float right )
     {
         close_left = left;
@@ -237,11 +182,6 @@ public class DelegateFuzzy : IFuzzy
         if (input < close_left || input > close_right)
             return 0.0f;
         return D(input);
-    }
-
-    public AnimationCurve GetCurve()
-    {
-        throw new NotImplementedException();
     }
 }
 
@@ -341,7 +281,6 @@ static class Fuzzy
         if (A.close_left == A.close_right)
             return A.close_right;
 
-        // The ammount of points sampled for a numerical integral approximation of the value
         const int resolution = 32;
 
         float interval = (A.close_right - A.close_left) / resolution;
