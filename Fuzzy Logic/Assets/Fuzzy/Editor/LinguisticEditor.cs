@@ -105,24 +105,7 @@ public class LinguisticEditor : Editor
             rect.x += 160.0f;
             rect.width -= 160.0f;
             // Draw the animation curve
-            AnimationCurve curve = new AnimationCurve();
-            TriangleFuzzyNumber tri = L.terms[index].values;
-            // Compute slopes
-            float l = 1.0f / (tri.core - tri.close_left);
-            float r = -1.0f / (tri.close_right - tri.core);
-
-            Keyframe left = new Keyframe(tri.close_left, 0.0f);
-            left.outTangent = l;
-            curve.AddKey(left);
-
-            Keyframe mid = new Keyframe(tri.core, 1.0f);
-            mid.inTangent = l;
-            mid.outTangent = r;
-            curve.AddKey(mid);
-
-            Keyframe right = new Keyframe(tri.close_right, 0.0f);
-            right.inTangent = r;
-            curve.AddKey(right);
+            AnimationCurve curve = L.terms[index].values.GetCurve();
 
             Keyframe min = new Keyframe(term_min, 0.0f);
             curve.AddKey(min);
@@ -133,7 +116,7 @@ public class LinguisticEditor : Editor
             EditorGUI.CurveField(
                 rect,
                 curve, GetBrightColor(index, L.terms.Length)
-                , new Rect(0,0,0,0));
+                , new Rect(0, 0, 0, 0));
         };
 
         // Set the header callback
