@@ -3,7 +3,17 @@ using System.Collections;
 
 public class PhysicsSolver : MonoBehaviour {
 
+    public PhysicsIntegrators.Integrator defaultIntegrator
+    {
+        set
+        {
+            defaultIntegratorInt = (int)value;
+        }
+    }
+    public int defaultIntegratorInt;
+
     public float gravity_constant;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -16,10 +26,10 @@ public class PhysicsSolver : MonoBehaviour {
         {
             if (!b.isActiveAndEnabled) continue;
 
-            // Apply Gravity    
+            // Turn forces into acceleration
             b.acceleration = ComputeGravityForce(list, b);
-            b.position += b.velocity * Time.deltaTime;
-            b.velocity += b.acceleration * Time.deltaTime;
+            // Integrate position and velocity
+            PhysicsIntegrators.Integrate(defaultIntegrator, b);
         }
 	}
 
@@ -37,4 +47,7 @@ public class PhysicsSolver : MonoBehaviour {
         }
         return Fsum / body.mass;
     }
+
+        
 }
+
