@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 public class PhysicsBody : MonoBehaviour
 {
-
-
     public float mass;
+    public float charge;
     public Vector3 acceleration;
     public Vector3 velocity;
     public Vector3 position
@@ -30,7 +28,7 @@ public class PhysicsBody : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        Handles.color = Color.green;
-        Handles.Label(transform.position, "Mass: " + mass + "kg");
+        //Handles.color = Color.white;
+        //Handles.Label(transform.position, "Mass: " + mass + "kg");
     }
 }
