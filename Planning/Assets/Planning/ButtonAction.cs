@@ -48,7 +48,7 @@ public class ButtonAction : SimpleAction
         // If there was a door, and it's open, we're good to go!
         if (Button.isPressed)
         {
-            world = Simulate(world, goal);
+            world = Simulate(world);
             return true;
         }
         else

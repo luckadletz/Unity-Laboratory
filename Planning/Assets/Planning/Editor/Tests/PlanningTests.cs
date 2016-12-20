@@ -92,31 +92,6 @@ public class StateListTests
 [TestFixture]
 public class PlanningTests
 {
-    [Test]
-    public void TestPlannerNodeHistory()
-    {
-        GameObject g = new GameObject();
-        // Make some simple actions
-        SimpleAction testActionA = g.AddComponent<SimpleAction>();
-        testActionA.preconditions.SetState("A", 1.0f);
-        SimpleAction testActionB = g.AddComponent<SimpleAction>();
-        testActionB.preconditions.SetState("B", 1.0f);
-        SimpleAction testActionC = g.AddComponent<SimpleAction>();
-        testActionB.preconditions.SetState("C", 1.0f);
-        // Make a basic tree
-        Planner.Node root = new Planner.Node(null, new StateList(), null);
-        Planner.Node walker = root;
-        // Add those actions to the tree
-        walker = walker.AddChild(testActionA, new StateList());
-        walker = walker.AddChild(testActionB, new StateList());
-        walker = walker.AddChild(testActionC, new StateList());
-
-        Queue<Action> history = walker.GetHistory();
-
-        Assert.AreEqual(testActionA, history.Dequeue());
-        Assert.AreEqual(testActionB, history.Dequeue());
-        Assert.AreEqual(testActionC, history.Dequeue());
-    }
 
     [Test]
     public void TestPlannerNoActions()

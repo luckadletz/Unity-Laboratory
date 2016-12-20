@@ -17,7 +17,7 @@ public class SimpleAction : Action
     }
 
     // Called when planning, to simulate the effects of the action to the world
-    public override StateList Simulate(StateList world, StateList goal)
+    public override StateList Simulate(StateList world)
     {
         StateList applied = world.Copy();
         postconditions.SaveCache();
@@ -34,7 +34,7 @@ public class SimpleAction : Action
     // This should eventually do what it promised in Apply
     public override bool DoAction(StateList world, StateList goal, GameObject actor)
     {
-        world = Simulate(world, goal);
+        world = Simulate(world);
         return true;
     }
 };

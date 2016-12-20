@@ -18,11 +18,11 @@ namespace Planning
         public Action[] possibleActions;
 
         public bool useBroadcastActions = true;
-        private Node planTree;
-        private List<Node> visited;
-        private List<Node> leaves;
+
         private bool currentlyPlanning;
 
+        private PlanTree tree;
+        private List<PlanTree.Node> visited; // NOTE: this might not be needed
         public Queue<Action> plan;
 
         private void RefreshPossibleActions()
@@ -41,38 +41,11 @@ namespace Planning
             possibleActions = actions.ToArray();
         }
 
-        private Node PopCheapestLeaf()
-        {
-            // Loop through and find the cheapest
-            Node cheapest = leaves[0];
-            foreach (Node n in leaves)
-            {
-                if (n.cost < cheapest.cost)
-                    cheapest = n;
-            }
-            // Remove it from the leaves list
-            leaves.Remove(cheapest);
-            // And then add it to visited
-            visited.Add(cheapest);
-            return cheapest;
-        }
-
-        private void AddLeaf(Node leaf)
-        {
-            // See if the leaf has a unique outcome
-            // We don't want to consider actions that get us a world state we've seen already
-            if (!ignoreRedundantPaths || IsUniqueOutcome(leaf.state))
-            {
-                // Note - we might want to see if this leaf is cheaper than the other route
-                leaves.Add(leaf);
-            }
-        }
-
         // Checks the crrent planning tree to see if this is a world we've already considered
         private bool IsUniqueOutcome(StateList world)
         {
             // Check each visited node's world state
-            foreach (Node n in visited)
+            foreach (PlanTree.Node n in visited)
             {
                 // Matches is asymetric, so we check twice for real equivalency
                 if (world.Matches(n.state) && n.state.Matches(world))
@@ -94,13 +67,9 @@ namespace Planning
             // Update the things we can do
             RefreshPossibleActions();
             // Reset our planning tree
-            planTree = new Node(null, world, null);
-            // Store all unexplored nodes in an unsorted list
-            leaves = new List<Node>();
+            tree = new PlanTree(world);
             // Store visited nodes in an unsorted list
-            visited = new List<Node>();
-            // Start with the current world as our starting node
-            leaves.Add(planTree);
+            visited = new List<PlanTree.Node>();
             // Start a coroutine that looks at nodes every frame
             StartCoroutine(DoPlanningHelper());
         }
@@ -113,22 +82,18 @@ namespace Planning
             // The ammount of nodes we look at each frame
             int nodesLookedAt = 0;
             // Look at nodes until we find a path or give up
-            while (nodesLookedAt < MAX_NODES && leaves.Count != 0)
+            while (nodesLookedAt < MAX_NODES && !tree.IsEmpty())
             {
                 // Get the next unexplored node
-                Node leaf = PopCheapestLeaf();
+                PlanTree.Node leaf = tree.PopCheapestLeaf();
                 nodesLookedAt++;
                 // Give the action a chance to update anything it needs
                 // Did we reach our goal?
                 if (leaf.state.Matches(goal))
                 {
-                    plan = leaf.GetHistory();
+                    plan = tree.GetPlan(leaf);
                     Debug.Log("Found plan of " + plan.Count +
                         " actions after looking at " + nodesLookedAt + " nodes!");
-                    // Do the cool line thing
-                    var p = GetComponentInChildren<debugDrawPlanning>();
-                    if (p) p.DrawPlan(plan);
-
                     currentlyPlanning = false;
                     yield break;
                 }
@@ -138,13 +103,10 @@ namespace Planning
                     bool validAction = act.CheckPreconditions(leaf.state, goal);
                     if (validAction)
                     {
-                        Node result = leaf.AddChild(act, goal);
-                        AddLeaf(result);
+                        tree.AddAction(leaf, act);
                     }
                     if (useDebugDraw)
                     {
-
-
                         Vector3 startPos = leaf.action ? leaf.action.transform.position : transform.position;
                         Debug.DrawLine(startPos, act.transform.position,
                             validAction ? Color.blue : (Color.red * 0.5f), validAction? 5.0f : 0.1f, false);
@@ -154,10 +116,6 @@ namespace Planning
                 if (useCoroutines &&
                     (nodesLookedAt % coroutineNodesPerFrame == 0))
                 {
-                    // Do the cool line thing
-                    var p = GetComponentInChildren<debugDrawPlanning>();
-                    if (p) p.DrawTree(leaf);
-
                     yield return null;
                 }
             }
@@ -192,58 +150,6 @@ namespace Planning
                 yield return null;
             }
             yield break;
-        }
-
-        public class Node
-        {
-            // The most recent action that got us to this state
-            public Action action;
-            // The state of the world at this point
-            public StateList state;
-            // Other actions we're considering after this one
-            public List<Node> children;
-            // The parent of this node
-            public Node parent = null;
-
-            public float cost;
-
-            public Node(Action act, StateList s, Node par, float c = 0.0f)
-            {
-                // Start with no children
-                children = new List<Node>();
-                // Remember what action created this node
-                action = act;
-                state = s;
-                // Who's your daddy?
-                parent = par;
-                cost = c;
-            }
-
-            public Node AddChild(Action action, StateList goal)
-            {
-                // The state is our nodes current state with the action applied
-                // Cost goes up by one
-                Node child = new Node(action, action.Simulate(state, goal), this, cost + 1.0f);
-                children.Add(this);
-                return child;
-            }
-
-            // This gives you a list of all actions that got you to this node
-            public Queue<Action> GetHistory()
-            {
-                Stack<Action> history = new Stack<Action>();
-                Node n = this;
-                while (n.action != null)
-                {
-                    history.Push(n.action);
-                    n = n.parent;
-                }
-                // Reverse our stack and return
-                Queue<Action> q = new Queue<Action>();
-                while (history.Count > 0)
-                    q.Enqueue(history.Pop());
-                return q;
-            }
         }
 
     };
