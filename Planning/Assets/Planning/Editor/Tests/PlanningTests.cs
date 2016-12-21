@@ -136,7 +136,7 @@ public class PlanningTests
         temp[0].preconditions.SetState("Gamma", 4.0f);
         temp[0].postconditions.SetState("Gamma", 6.0f);
 
-        p.possibleActions = temp;
+        // p.possibleActions = temp;
         p.DoPlanning();
         Queue<Action> plan = p.plan;
         Assert.AreEqual(1, plan.Count);
@@ -170,7 +170,7 @@ public class PlanningTests
         temp[2].preconditions.SetState("Alarm", 4.0f);
         temp[2].postconditions.SetState("Alarm", 6.0f);
 
-        p.possibleActions = temp;
+        // p.possibleActions = temp;
 
         p.DoPlanning();
         Queue<Action> plan = p.plan;
@@ -229,13 +229,13 @@ public class PlanningTests
         p.goal.SetState("Score", 2.0f);
 
         // Each action gets us a little bit closer to the goal score
-        p.possibleActions = new SimpleAction[2];
+        SimpleAction[] temp = new SimpleAction[2];
         for (int i = 0; i < 2; ++i)
         {
             SimpleAction s = g.AddComponent<SimpleAction>();
             s.preconditions.SetState("Score", i);
             s.postconditions.SetState("Score", i + 1);
-            p.possibleActions[i] = s;
+            temp[i] = s;
         }
 
         // We should give up and return no path
@@ -280,6 +280,7 @@ public class PlanningTests
         // Flip three levers to the on position when you can only some ways
         GameObject g = new GameObject();
         Planner p = g.AddComponent<Planner>();
+        p.useBroadcastActions = false;
 
         p.world = new StateList();
         p.world.SetState("Red", 0.0f);

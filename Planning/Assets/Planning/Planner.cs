@@ -7,52 +7,26 @@ namespace Planning
     [AddComponentMenu("Planning/Planner")]
     public class Planner : MonoBehaviour
     {
-        public bool useCoroutines = false;
-        public bool useDebugDraw;
-        [Tooltip("Turning this off may give performance boosts when there are less possible paths")]
-        public bool ignoreRedundantPaths = true;
-        public int coroutineNodesPerFrame = 8;
-
+        // Should world/goal be a component that we point to?
         public StateList world;
         public StateList goal;
-        public Action[] possibleActions;
 
+        [Tooltip("How many options do we want to consider per frame. Set to 0 or negative to do all planning in one frame.")]
+        public int ticksPerFrame = 0;
+        [Tooltip("Turning this off may give performance boosts when there are less possible paths")]
+        public bool ignoreRedundantPaths = true;
+
+        [Tooltip("Do we want to use actions in the scene marked as broadcast?")]
         public bool useBroadcastActions = true;
+
+        private Action[] possibleActions;
 
         private bool currentlyPlanning;
 
         private PlanTree tree;
         private List<PlanTree.Node> visited; // NOTE: this might not be needed
+
         public Queue<Action> plan;
-
-        private void RefreshPossibleActions()
-        {
-            List<Action> actions = new List<Action>();
-            // Get All broadcast actions
-            if (useBroadcastActions)
-            {
-                actions.AddRange(FindObjectsOfType<Action>());
-                actions.RemoveAll(x => x.broadcast == false);
-            }
-
-            // Get all components on us and our children
-            actions.AddRange(GetComponentsInChildren<Action>());
-
-            possibleActions = actions.ToArray();
-        }
-
-        // Checks the crrent planning tree to see if this is a world we've already considered
-        private bool IsUniqueOutcome(StateList world)
-        {
-            // Check each visited node's world state
-            foreach (PlanTree.Node n in visited)
-            {
-                // Matches is asymetric, so we check twice for real equivalency
-                if (world.Matches(n.state) && n.state.Matches(world))
-                    return false;
-            }
-            return true;
-        }
 
         public void DoPlanning()
         {
@@ -105,16 +79,9 @@ namespace Planning
                     {
                         tree.AddAction(leaf, act);
                     }
-                    if (useDebugDraw)
-                    {
-                        Vector3 startPos = leaf.action ? leaf.action.transform.position : transform.position;
-                        Debug.DrawLine(startPos, act.transform.position,
-                            validAction ? Color.blue : (Color.red * 0.5f), validAction? 5.0f : 0.1f, false);
-                    }
                 }
                 // Wait for end of frame if that's what you're into
-                if (useCoroutines &&
-                    (nodesLookedAt % coroutineNodesPerFrame == 0))
+                if (ticksPerFrame > 0 && (nodesLookedAt % ticksPerFrame == 0))
                 {
                     yield return null;
                 }
@@ -152,5 +119,33 @@ namespace Planning
             yield break;
         }
 
+        private void RefreshPossibleActions()
+        {
+            List<Action> actions = new List<Action>();
+            // Get All broadcast actions
+            if (useBroadcastActions)
+            {
+                actions.AddRange(FindObjectsOfType<Action>());
+                actions.RemoveAll(x => x.broadcast == false);
+            }
+
+            // Get all components on us and our children
+            actions.AddRange(GetComponentsInChildren<Action>());
+
+            possibleActions = actions.ToArray();
+        }
+
+        // Checks the crrent planning tree to see if this is a world we've already considered
+        private bool IsUniqueOutcome(StateList world)
+        {
+            // Check each visited node's world state
+            foreach (PlanTree.Node n in visited)
+            {
+                // Matches is asymetric, so we check twice for real equivalency
+                if (world.Matches(n.state) && n.state.Matches(world))
+                    return false;
+            }
+            return true;
+        }
     };
 }
