@@ -98,6 +98,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1549204417}
     m_Modifications:
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4108920732924672, guid: 70028e09c41bf814da30a0f283ea9f8f, type: 2}
       propertyPath: m_LocalPosition.x
       value: -0.49800003
@@ -128,6 +133,76 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4108920732924672, guid: 70028e09c41bf814da30a0f283ea9f8f, type: 2}
       propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.colorGradient.key0.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.colorGradient.atime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4004304e17f1d1b4eb8e272975f852ad, type: 2}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[2].time
+      value: 0.60926366
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[2].value
+      value: 0.34044036
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[2].inSlope
+      value: 2.1220071
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[2].outSlope
+      value: 2.1220071
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[3].time
+      value: 0.9049429
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[3].value
+      value: 0.026666686
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].time
+      value: 0.21334544
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].value
+      value: 0.90666676
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.6666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120446817959055244, guid: 70028e09c41bf814da30a0f283ea9f8f,
+        type: 2}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -332,13 +407,13 @@ LineRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1086242648}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee72226a38b78084696bcb7f0f0cd62c, type: 2}
+  - {fileID: 2100000, guid: 4004304e17f1d1b4eb8e272975f852ad, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -361,7 +436,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 1
+    widthMultiplier: 0.6666667
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -372,10 +447,16 @@ LineRenderer:
         outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.17532264
-        value: 0.78666675
+        time: 0.21334544
+        value: 0.90666676
         inSlope: -0.000000551098
         outSlope: -0.000000551098
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.60926366
+        value: 0.34044036
+        inSlope: 2.1220071
+        outSlope: 2.1220071
         tangentMode: 0
       - serializedVersion: 2
         time: 0.9049429
@@ -389,7 +470,7 @@ LineRenderer:
     colorGradient:
       key0:
         serializedVersion: 2
-        rgba: 16777215
+        rgba: 4294967295
       key1:
         serializedVersion: 2
         rgba: 4294967295
@@ -420,7 +501,7 @@ LineRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 13107
+      atime1: 65535
       atime2: 65535
       atime3: 0
       atime4: 0
