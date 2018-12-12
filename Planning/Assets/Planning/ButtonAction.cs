@@ -43,7 +43,7 @@ public class ButtonAction : SimpleAction
     public override bool DoAction(StateList world, StateList goal, GameObject actor)
     {
         // Walk to the button
-        actor.GetComponent<NavMeshAgent>().destination = Button.transform.position;
+        actor.GetComponent<UnityEngine.AI.NavMeshAgent>().destination = Button.transform.position;
 
         // If there was a door, and it's open, we're good to go!
         if (Button.isPressed)

@@ -8,7 +8,7 @@ namespace Planning
     public struct State
     {
         public State(string n, float v)
-        {
+        {   
             Name = n;
             Value = v;
         }
@@ -127,7 +127,6 @@ namespace Planning
 
         public float GetState(string name)
         {
-            // DONE Use dictionary cache if avaliable
             if (useCache)
             {
                 if ( HasState(name) )
@@ -150,7 +149,7 @@ namespace Planning
                 // We may want to instead throw an exception.
                 return 0.0f;
             }
-        }   // O(n)
+        }
 
         public bool Matches(StateList conditions)
         {
