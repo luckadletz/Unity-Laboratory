@@ -1,16 +1,16 @@
-﻿using System.Collections;
+﻿/* Luc Kadletz - 12/12/2018 */
+
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class PlanningWorldState : MonoBehaviour {
+namespace Planning
+{
+	public class WorldState  
+	{
+		public void SetState(string name, float value);
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		public void GetState(string name, float value);
+
+		public bool Matches(WorldState requirements);
 	}
 }

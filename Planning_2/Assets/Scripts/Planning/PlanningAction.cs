@@ -1,16 +1,16 @@
-﻿using System.Collections;
+﻿/* Luc Kadletz - 12/12/2018 */
+
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class PlanningAction : MonoBehaviour {
+namespace Planning
+{
+	public abstract class Action
+	{
+		public float Cost { get; protected set; }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		public WorldState Expected { get; protected set; }
+
+		public abstract bool Execute(GameObject);
 	}
 }
