@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Planning
 {
@@ -11,6 +12,6 @@ namespace Planning
 
 		public WorldState Expected { get; protected set; }
 
-		public abstract bool Execute(GameObject);
+		public abstract bool Execute(GameObject actor);
 	}
 }

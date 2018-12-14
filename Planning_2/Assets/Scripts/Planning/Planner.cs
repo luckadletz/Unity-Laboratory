@@ -5,10 +5,8 @@ using System.Collections.Generic;
 
 namespace Planning
 {
-
 	public class Planner 
 	{
 		
 	}
-
 }
