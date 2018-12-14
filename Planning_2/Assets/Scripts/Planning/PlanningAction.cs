@@ -15,3 +15,4 @@ namespace Planning
 		public abstract bool Execute(GameObject actor);
 	}
 }
+	
