@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlanningActionSource : MonoBehaviour {
+namespace Planning
+{
 
-	// Use this for initialization
-	void Start () {
-		
+	public interface IPlanningActionSource 
+	{
+		IList<Action> GetPossibleActions(WorldState state);
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

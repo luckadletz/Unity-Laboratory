@@ -45,4 +45,14 @@ public class DoorLogic : MonoBehaviour {
 		Vector3 targetPos = IsOpen ? OpenPosition : ClosedPosition;
 		transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime);
 	}
+
+	// This is called when a planning path
+	bool WillBlockPath(Planning.WorldState state)
+	{
+		// Figure out where we are going to be given state
+		return false;
+	}
+
+	
+
 }

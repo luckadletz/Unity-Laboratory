@@ -17,6 +17,7 @@ public class PlanningAgent : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		Object[] sources = GameObject.FindObjectsOfType(typeof(IPlanningActionSource));
 		
 	}
 }
