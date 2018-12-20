@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Planning;
 
-public class ButtonLogic : MonoBehaviour, IPlanningActionSource
+public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateSource
 {
 	public bool IsPressed = false;
 
@@ -28,6 +28,11 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource
 		}
 
 		return actions;
+    }
+
+    public void ApplyCurrentState(WorldState world)
+    {
+        world.SetState(new ButtonPlanningState(this));
     }
 
 	public class ButtonPlanningState : Planning.State
@@ -94,5 +99,5 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource
 		transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime);
 	}
 
-	
+
 }

@@ -659,26 +659,14 @@ GameObject:
   - component: {fileID: 1301583872}
   - component: {fileID: 1301583871}
   - component: {fileID: 1301583870}
-  - component: {fileID: 1301583869}
   - component: {fileID: 1301583874}
   m_Layer: 0
   m_Name: Button
-  m_TagString: Untagged
+  m_TagString: Planning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1301583869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1301583868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4211b26e053e5a34d822f0c245b15952, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!23 &1301583870
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -807,6 +795,10 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211289426889050, guid: f7bcd035ae2fd0840a132506227de765, type: 2}
+      propertyPath: m_TagString
+      value: Planning
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f7bcd035ae2fd0840a132506227de765, type: 2}
@@ -939,26 +931,14 @@ GameObject:
   - component: {fileID: 1674067394}
   - component: {fileID: 1674067393}
   - component: {fileID: 1674067392}
-  - component: {fileID: 1674067391}
   - component: {fileID: 1674067396}
   m_Layer: 0
   m_Name: Goal
-  m_TagString: Untagged
+  m_TagString: Planning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1674067391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1674067390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4211b26e053e5a34d822f0c245b15952, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!23 &1674067392
 MeshRenderer:
   m_ObjectHideFlags: 0
