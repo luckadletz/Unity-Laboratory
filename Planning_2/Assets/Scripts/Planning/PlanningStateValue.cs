@@ -2,14 +2,21 @@ using System;
 
 namespace Planning
 {
-    [Serializable]
-    public abstract class State
-    {
-        public string Name { get; protected set; }
+	[Serializable]
+	public abstract class State : ICloneable
+	{
+		public string Name { get; protected set; }
 
-        public bool Matches(State other)
-        {
-            return this == other;
-        }
-    }
+		public abstract object Clone();
+
+		public bool Matches(State other)
+		{
+			return this == other;
+		}
+
+		public override string ToString()
+		{
+			return "{ " + Name + " }";
+		}
+	}
 }

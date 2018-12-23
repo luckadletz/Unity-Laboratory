@@ -13,37 +13,55 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 
 	private Vector3 PressedPosition;
 
-#region  planning
+	#region planning
 
-    public IList<Action> GetPossibleActions(WorldState world)
-    {
+	public IList<Action> GetPossibleActions(WorldState world)
+	{
 		IList<Action> actions = new List<Action>();
 
 		// We only care about this butotn's state
 		ButtonPlanningState buttonState = world.GetState(gameObject.name) as ButtonPlanningState;
 
-		if(!buttonState.IsPressed)
+		if (!buttonState.IsPressed)
 		{
 			actions.Add(new PressButtonAction(this, world));
+			Debug.Log("Adding press " + gameObject.name + " action");
 		}
 
 		return actions;
-    }
+	}
 
-    public void ApplyCurrentState(WorldState world)
-    {
-        world.SetState(new ButtonPlanningState(this));
-    }
+	public void ApplyCurrentState(WorldState world)
+	{
+		world.SetState(new ButtonPlanningState(this));
+	}
 
 	public class ButtonPlanningState : Planning.State
 	{
 		public bool IsPressed;
-        public ButtonPlanningState(ButtonLogic button)
+		public ButtonPlanningState(ButtonLogic button)
 		{
 			Name = button.gameObject.name;
 			IsPressed = button.IsPressed;
 		}
-    }
+
+		public ButtonPlanningState(ButtonPlanningState buttonState)
+		{
+			Name = buttonState.Name;
+			this.IsPressed = buttonState.IsPressed;
+		}
+
+
+		public override string ToString()
+		{
+			return "{" + "Button " + Name + " : " + IsPressed.ToString() + " }";
+		}
+
+		public override object Clone()
+		{
+			return new ButtonPlanningState(this);
+		}
+	}
 
 	public class PressButtonAction : Planning.Action
 	{
@@ -54,7 +72,7 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 			Button = button;
 
 			Cost = 1.0f; // Distance from agent (how do we know agent?)
-			
+
 			Expected = world.Step(); // Make a lazy copy here
 			var results = Expected.GetState(button.gameObject.name) as ButtonPlanningState;
 			results.IsPressed = true;
@@ -67,20 +85,20 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 		}
 	}
 
-#endregion  planning
+	#endregion planning
 
-    public void OnTriggerEnter(Collider other)
+	public void OnTriggerEnter(Collider other)
 	{
-		if(!IsPressed && other.gameObject.GetComponent<CharacterController>() != null)
+		if (!IsPressed && other.gameObject.GetComponent<CharacterController>() != null)
 		{
 			IsPressed = true;
 		}
 	}
 
 	// Use this for initialization
-	void Start () 
+	void Start()
 	{
-		if(IsPressed)
+		if (IsPressed)
 		{
 			PressedPosition = transform.position;
 			UnpressedPosition = PressedPosition - PressedOffset;
@@ -91,13 +109,16 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 			PressedPosition = UnpressedPosition + PressedOffset;
 		}
 	}
-	
+
 	// Update is called once per frame
-	void Update () 
+	void Update()
 	{
 		Vector3 targetPos = IsPressed ? PressedPosition : UnpressedPosition;
 		transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime);
 	}
 
-
+	public void UpdateState(WorldState possible)
+	{
+		
+	}
 }

@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Planning;
 using UnityEngine;
 
-public class DoorLogic : MonoBehaviour {
+public class DoorLogic : MonoBehaviour, Planning.IPlanningStateSource
+{
 
 	public Vector3 OpenOffset;
 	public ButtonLogic Button;
@@ -15,7 +17,7 @@ public class DoorLogic : MonoBehaviour {
 	{
 		get
 		{
-			if(Button == null)
+			if (Button == null)
 			{
 				return false;
 			}
@@ -24,23 +26,33 @@ public class DoorLogic : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
-	void Start () 
+	public void ApplyCurrentState(WorldState world)
 	{
-		if(IsOpen)
+
+	}
+
+	public void UpdateState(WorldState possible)
+	{
+		// Do we even need this here? 
+	}
+
+	// Use this for initialization
+	void Start()
+	{
+		if (IsOpen)
 		{
 			OpenPosition = transform.position;
 			ClosedPosition = OpenPosition - OpenOffset;
-		}	
+		}
 		else
 		{
 			ClosedPosition = transform.position;
 			OpenPosition = ClosedPosition + OpenOffset;
 		}
 	}
-	
+
 	// Update is called once per frame
-	void Update () 
+	void Update()
 	{
 		Vector3 targetPos = IsOpen ? OpenPosition : ClosedPosition;
 		transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime);
@@ -52,7 +64,5 @@ public class DoorLogic : MonoBehaviour {
 		// Figure out where we are going to be given state
 		return false;
 	}
-
-	
 
 }
