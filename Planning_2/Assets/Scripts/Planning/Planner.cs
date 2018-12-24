@@ -23,18 +23,15 @@ namespace Planning
 
 			public bool Step(GameObject actor)
 			{
+				if(Actions.Count == 0) return true;
 
-				if (Actions.Count == 0)
-				{
-					return false;
-				}
-
-				if (!Actions[0].Execute(actor))
+				bool done = Actions[0].Execute(actor);
+				if (done)
 				{
 					Actions.RemoveAt(0);
 				}
 
-				return true;
+				return Actions.Count == 0;
 			}
 
 		}
@@ -48,9 +45,11 @@ namespace Planning
 
 			WorldState possible = current.Step();
 
-			worldRefresh(current);
+			worldRefresh(possible);
 
-			IList<Action> actions = actionRefresh(current);
+			IList<Action> actions = actionRefresh(possible);
+
+		Debug.Log("Found " + actions.Count + " actions.");
 
 			return new Plan(actions);
 		}

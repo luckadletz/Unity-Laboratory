@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Planning;
+using UnityEngine.AI;
 
 public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateSource
 {
@@ -81,7 +82,8 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 		public override bool Execute(GameObject actor)
 		{
 			Debug.Log(actor.name + " wants to press " + Button.name);
-			return true; // ez pz
+			actor.GetComponent<NavMeshAgent>().SetDestination(Button.transform.position);
+			return Button.IsPressed; // ez pz
 		}
 	}
 

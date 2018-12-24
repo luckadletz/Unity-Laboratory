@@ -12,20 +12,31 @@ public class PlanningAgent : MonoBehaviour
 
 	private readonly string PlanningTag = "Planning";
 
+	Planner.Plan CurrentPlan = null;
+
 	void Update()
 	{
-		WorldState current = GetCurrentWorldState();
-		IList<Action> possibleActions = GetAllAvaliableActions(current);
 
-		Planning.Planner.Plan plan = planner.MakePlan(current, goal, GetAllAvaliableActions, UpdatePossibleWorldState);
-
+		if(CurrentPlan == null)
+		{
+			WorldState current = GetCurrentWorldState();
+			CurrentPlan = planner.MakePlan(current, goal, GetAllAvaliableActions, UpdatePossibleWorldState);
+		}
+		else
+		{
+			bool done = CurrentPlan.Step(gameObject);
+			if(done)
+			{
+				Debug.Log("Done!");
+			}
+		}
 	}
 
+/*
+	Get the planning WorldState that matches the world as it is
+ */
 	WorldState GetCurrentWorldState()
 	{
-		// TODO Fix this - sending messages probably easiest way?
-
-		// Build the current world state
 		WorldState current = new WorldState();
 
 		GameObject[] planningObjects = GameObject.FindGameObjectsWithTag(PlanningTag);
@@ -39,8 +50,16 @@ public class PlanningAgent : MonoBehaviour
 		}
 
 		return current;
+		/* NOTE This is probably a bottlenecking function
+			FindGameObjectsWithTag is slow, and SendMessage is slow
+			Probably want to cache the list of Planning objects
+			and call directly instead of going through messaging
+		*/
 	}
 
+/*
+	Update any secodary effects on the world that may not have been directly caused by the action
+ */
 	void UpdatePossibleWorldState(WorldState possible)
 	{
 		GameObject[] planningObjects = GameObject.FindGameObjectsWithTag(PlanningTag);
@@ -52,22 +71,33 @@ public class PlanningAgent : MonoBehaviour
 				Debug.Log("Updating: " + possible);
 			}
 		}
+		
+		/* NOTE This is probably a bottlenecking function
+			FindGameObjectsWithTag is slow, and SendMessage is slow
+			Probably want to cache the list of Planning objects
+			and call directly instead of going through messaging
+		*/
 	}
 
-	IList<Action> GetAllAvaliableActions(WorldState world)
+/*
+	Determine the list of actions this agent can do given a planning worldstate
+ */
+	IList<Action> GetAllAvaliableActions(WorldState possible)
 	{
-		// TODO Fix this - sending messages probably easiest way?
-		// NOTE The planner is probably going
-		// Get all actions from the scene
-		Object[] sources = new Object[0]; // HACK GameObject.FindObjectsOfType(typeof(IPlanningActionSource));
 		IList<Planning.Action> actions = new List<Planning.Action>();
-		foreach (IPlanningActionSource source in sources)
+
+		GameObject[] sources =  GameObject.FindGameObjectsWithTag(PlanningTag);
+		foreach (GameObject source in sources)
 		{
-			foreach (Action act in source.GetPossibleActions(world))
+			var actionSource = source.GetComponent(typeof(IPlanningActionSource)) as IPlanningActionSource;
+
+			if(actionSource == null) continue;
+			foreach (Action act in actionSource.GetPossibleActions(possible))
 			{
 				actions.Add(act);
 			}
 		}
+
 		return actions;
 	}
 
