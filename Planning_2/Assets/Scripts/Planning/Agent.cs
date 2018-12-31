@@ -29,7 +29,8 @@ namespace Planning
 
 			while(!tree.IsEmpty())
 			{
-				PlanTree.Node n = tree.PopCheapestLeaf(); // This is bredth-first, try "closest" for A*like
+				// This is breadth-first... try "closest" for A*like
+				PlanTree.Node n = tree.PopCheapestLeaf(); 
 
 				if(n.Step.Expected.Matches(goal))
 				{

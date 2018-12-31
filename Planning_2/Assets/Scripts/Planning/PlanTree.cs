@@ -40,7 +40,7 @@ namespace Planning
 		public Plan GetPlan(Node end)
 		{
 			Stack<Step> history = new Stack<Step>();
-			while(end.Step != null)
+			while(end != null)
 			{
 				history.Push(end.Step);
 				end = end.Parent;
@@ -84,7 +84,7 @@ namespace Planning
 
 				Children = new List<Node>();
 
-				Step = null;
+				Step = new NoopStep(0.0f, start);
 
 				TotalCost = 0.0f;
 			}

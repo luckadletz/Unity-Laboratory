@@ -15,4 +15,19 @@ namespace Planning
 		// Returns true when finished, false to run again next frame
 		public abstract bool Action(Agent agent);
 	}
+
+	public class NoopStep : Step
+	{
+		public NoopStep(float cost, World expected)
+		{
+			Cost = cost;
+			Expected = expected;
+		}
+
+		public override bool Action(Agent agent)
+		{
+			return true;
+		}
+	}
+
 }
