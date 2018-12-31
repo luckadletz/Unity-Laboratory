@@ -5,10 +5,9 @@ using UnityEngine;
 namespace Planning
 {
 
-	public interface IPlanningActionSource 
+	public interface IActionSource 
 	{
-		IList<Action> GetPossibleActions(WorldState state);
-
+		IList<Step> GetPossibleActions(World state, Agent agent);
 	}
 
-}
+} 

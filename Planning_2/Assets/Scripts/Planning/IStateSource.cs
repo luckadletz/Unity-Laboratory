@@ -5,11 +5,11 @@ using UnityEngine;
 namespace Planning
 {
 
-	public interface IPlanningStateSource
+	public interface IStateSource
 	{
-		void ApplyCurrentState(WorldState world);
+		void ApplyCurrentState(World world);
 		// Do we want to pass in container??? seems sketch, but may be necessary for reactive objects...
-		void UpdateState(WorldState possible);
+		void UpdateState(World possible);
 
 	}
 

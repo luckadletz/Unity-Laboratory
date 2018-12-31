@@ -9,7 +9,7 @@ namespace Planning
 
 		public abstract object Clone();
 
-		public bool Matches(State other)
+		public virtual bool Matches(State other)
 		{
 			return this == other;
 		}

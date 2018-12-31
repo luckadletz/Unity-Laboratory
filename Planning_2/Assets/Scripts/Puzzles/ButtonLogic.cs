@@ -4,7 +4,7 @@ using UnityEngine;
 using Planning;
 using UnityEngine.AI;
 
-public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateSource
+public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 {
 	public bool IsPressed = false;
 
@@ -16,26 +16,30 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 
 	#region planning
 
-	public IList<Action> GetPossibleActions(WorldState world)
+	public IList<Step> GetPossibleActions(World world, Agent agent)
 	{
-		IList<Action> actions = new List<Action>();
+		IList<Step> actions = new List<Step>();
 
 		// We only care about this butotn's state
 		ButtonPlanningState buttonState = world.GetState(gameObject.name) as ButtonPlanningState;
+		Vector3 buttonPos = transform.position; // If button can move, this must be in world
 
 		if (!buttonState.IsPressed)
 		{
-			actions.Add(new PressButtonAction(this, world));
+			Step act = new PressButtonStep(this, agent, world);
+			actions.Add(act);
 			Debug.Log("Adding press " + gameObject.name + " action");
 		}
 
 		return actions;
 	}
 
-	public void ApplyCurrentState(WorldState world)
+	public void ApplyCurrentState(World world)
 	{
 		world.SetState(new ButtonPlanningState(this));
 	}
+
+	public void UpdateState(World world) { } 
 
 	public class ButtonPlanningState : Planning.State
 	{
@@ -46,12 +50,17 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 			IsPressed = button.IsPressed;
 		}
 
+		public ButtonPlanningState(string name, bool isPressed)
+		{
+			Name = name;
+			IsPressed = isPressed;
+		}
+
 		public ButtonPlanningState(ButtonPlanningState buttonState)
 		{
 			Name = buttonState.Name;
 			this.IsPressed = buttonState.IsPressed;
 		}
-
 
 		public override string ToString()
 		{
@@ -62,16 +71,32 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 		{
 			return new ButtonPlanningState(this);
 		}
+
+		public override bool Matches(State other)
+		{
+			ButtonPlanningState otherButton = other as ButtonPlanningState;
+
+			if(otherButton == null)
+			{
+				// Maybe log that you're comparing a state of a different type?
+				// Maybe handle this logic in base class, and rely on IEquatable in most cases (neat!)
+				return false;
+			}
+
+			return IsPressed == otherButton.IsPressed;
+		}
+
 	}
 
-	public class PressButtonAction : Planning.Action
+	public class PressButtonStep : Planning.Step
 	{
 		ButtonLogic Button;
+		Agent Agent;
 
-		public PressButtonAction(ButtonLogic button, WorldState world)
+		public PressButtonStep(ButtonLogic button, Agent agent, World world)
 		{
 			Button = button;
-
+			Agent = agent;
 			Cost = 1.0f; // Distance from agent (how do we know agent?)
 
 			Expected = world.Step(); // Make a lazy copy here
@@ -79,11 +104,11 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 			results.IsPressed = true;
 		}
 
-		public override bool Execute(GameObject actor)
+		public override bool Action(Agent agent)
 		{
-			Debug.Log(actor.name + " wants to press " + Button.name);
-			actor.GetComponent<NavMeshAgent>().SetDestination(Button.transform.position);
-			return Button.IsPressed; // ez pz
+			Debug.Log(agent.Name + " wants to press " + Button.name);
+			// UNDONE actor.GetComponent<NavMeshAgent>().SetDestination(Button.transform.position);
+			return Button.IsPressed;
 		}
 	}
 
@@ -117,10 +142,5 @@ public class ButtonLogic : MonoBehaviour, IPlanningActionSource, IPlanningStateS
 	{
 		Vector3 targetPos = IsPressed ? PressedPosition : UnpressedPosition;
 		transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime);
-	}
-
-	public void UpdateState(WorldState possible)
-	{
-		
 	}
 }

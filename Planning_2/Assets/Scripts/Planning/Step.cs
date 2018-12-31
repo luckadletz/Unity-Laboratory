@@ -6,12 +6,13 @@ using UnityEngine;
 
 namespace Planning
 {
-	public abstract class Action
+	public abstract class Step
 	{
 		public float Cost { get; protected set; }
 
-		public WorldState Expected { get; protected set; }
+		public World Expected { get; protected set; }
 
-		public abstract bool Execute(GameObject actor);
+		// Returns true when finished, false to run again next frame
+		public abstract bool Action(Agent agent);
 	}
 }

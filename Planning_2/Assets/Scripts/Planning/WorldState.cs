@@ -3,10 +3,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Planning
 {
-	public class WorldState
+	public class World
 	{
 
 		public void SetState(State state)
@@ -29,23 +30,38 @@ namespace Planning
 			return States.ContainsKey(name);
 		}
 
-		public bool Matches(WorldState expectations)
+		public bool Matches(World expectations)
 		{
-			foreach (State expectation in expectations.States.Values)
+			Debug.Log("Checking " + expectations + " against " + this);
+			foreach (var expectation in expectations.States)
 			{
-				State current = GetState(expectation.Name);
-				if (current.Matches(expectation)) // Order might be tricky here
+				Debug.Log("Checking state: " + expectation.Value);
+
+				if(!HasState(expectation.Key))
 				{
+					Debug.Log("no state");
 					return false;
 				}
+
+				State current = GetState(expectation.Key);
+				if (!current.Matches(expectation.Value)) // Order might be tricky here
+				{
+					Debug.Log(current + " does not match " + expectation.Value);
+					return false;
+				}
+				
+				Debug.Log(current + " matches" + expectation.Value);
 			}
 			return true;
 		}
 
-		public WorldState Step()
+		public World Step()
 		{
-			// Do a (preferably lazy) copy here
-			WorldState copy = this.MemberwiseClone() as WorldState;
+			World copy = new World();
+			foreach(var state in States)
+			{
+				copy.SetState(state.Value.Clone() as State);
+			}
 			return copy;
 		}
 
