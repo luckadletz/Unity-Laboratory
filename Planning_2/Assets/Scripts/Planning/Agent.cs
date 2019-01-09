@@ -18,7 +18,7 @@ namespace Planning
 		public string Name; // Should be unique, TODO use for data indexing
 
 		public Plan MakePlan( 
-			World current, World goal,
+			World current, IGoal goal,
 			RefreshActionsCallback actionRefresh, RefreshWorldCallback worldRefresh)
 		{
 			worldRefresh(current);
@@ -29,16 +29,17 @@ namespace Planning
 
 			while(!tree.IsEmpty())
 			{
-				// This is breadth-first... try "closest" for A*like
+				// Select the endpoint of the easiest plan we have
+				// This is bredth-first, try "closest" for A*like
 				PlanTree.Node n = tree.PopCheapestLeaf(); 
 
-				if(n.Step.Expected.Matches(goal))
-				{
+				if(goal.MeetsGoal(n.Expected))
+				{	
 					Debug.Log("Plan found!");
 					return tree.GetPlan(n);
 				}
 
-				IList<Step> actions = actionRefresh(n.Step.Expected);
+				IList<Step> actions = actionRefresh(n.Expected);
 				Debug.Log("Found " + actions.Count + " actions.");
 				foreach(Step a in actions)
 				{

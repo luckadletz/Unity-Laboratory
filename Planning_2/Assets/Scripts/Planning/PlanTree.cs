@@ -60,6 +60,7 @@ namespace Planning
 			public IList<Node> Children { get; private set; }
 			public readonly Step Step;
 			public readonly float TotalCost;
+			public readonly World Expected;
 
 			public Node(Node parent, Step step)
 			{
@@ -72,6 +73,7 @@ namespace Planning
 				Children = new List<Node>();
 
 				Step = step;
+				Expected = step.Expected;
 
 				TotalCost = Parent.TotalCost + Step.Cost;
 			}
@@ -85,6 +87,7 @@ namespace Planning
 				Children = new List<Node>();
 
 				Step = new NoopStep(0.0f, start);
+				Expected = Step.Expected;
 
 				TotalCost = 0.0f;
 			}

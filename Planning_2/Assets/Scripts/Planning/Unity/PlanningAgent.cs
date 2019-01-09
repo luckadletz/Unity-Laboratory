@@ -8,7 +8,7 @@ using System;
 public class PlanningAgent : MonoBehaviour
 {
 
-	public World goal = new World();
+	public ExpectedWorldGoal goal = new ExpectedWorldGoal();
 
 	private Agent planner = new Agent();
 
@@ -18,8 +18,7 @@ public class PlanningAgent : MonoBehaviour
 
 	void Start()
 	{
-		// Hardcode goal
-		goal.SetState(new ButtonLogic.ButtonPlanningState("Goal", isPressed: true));
+		
 	}
 
 	void Update()

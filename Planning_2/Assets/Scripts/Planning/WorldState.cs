@@ -7,8 +7,10 @@ using UnityEngine;
 
 namespace Planning
 {
+	[Serializable]
 	public class World
 	{
+		private Dictionary<string, State> States = new Dictionary<string, State>();
 
 		public void SetState(State state)
 		{
@@ -77,7 +79,6 @@ namespace Planning
 			return worldString;
 		}
 
-		private Dictionary<string, State> States = new Dictionary<string, State>();
 
 	}
 }
