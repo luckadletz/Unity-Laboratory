@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Planning;
 using System;
+using UnityEngine.AI;
 
 namespace Planning
 {
 	
 	[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
-	public class Agent : MonoBehaviour
+	public class Agent : MonoBehaviour, IStateSource, IActionSource
 	{
 
 		public ExpectedWorldGoal goal = new ExpectedWorldGoal();
@@ -45,10 +46,8 @@ namespace Planning
 			}
 		}
 
-		public bool CanPath(World world)
+		public bool CanPath(World world, Vector3 target)
 		{
-			// TODO store our position first, so we can get it here
-			// var currentState = world.GetState(gameobject.name) as PlaningData<PlanningAgent>
 			// Vector3 pos = currentState.position;
 			// get all objects in the world to update their position (I don't like this bit...)
 			// try and pathfind from wherever
@@ -122,5 +121,32 @@ namespace Planning
 			return actions;
 		}
 
+		public IList<Step> GetPossibleActions(World state, Agent agent)
+		{
+
+			throw new NotImplementedException();
+		}
+
+		public void ApplyCurrentState(World world)
+		{
+			// TODO set position
+		}
+
+		class PositionState : Planning.State
+		{
+			public PositionState()
+			{
+
+			}
+
+			public override object Clone()
+			{
+				throw new NotImplementedException();
+			}
+		};
+
+		public void UpdateState(World possible)
+		{
+		}
 	}
 }

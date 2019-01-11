@@ -24,7 +24,7 @@ public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 		ButtonPlanningState buttonState = world.GetState(gameObject.name) as ButtonPlanningState;
 		Vector3 buttonPos = transform.position; // If button can move, this must be in world
 
-		if (!buttonState.IsPressed)
+		if(!buttonState.IsPressed && agent.CanPath(world, buttonState.Position))
 		{
 			Step act = new PressButtonStep(this, agent, world);
 			actions.Add(act);
@@ -39,15 +39,19 @@ public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 		world.SetState(new ButtonPlanningState(this));
 	}
 
-	public void UpdateState(World world) { } 
+	public void UpdateState(World world)
+	{
+	}
 
 	public class ButtonPlanningState : Planning.State
 	{
 		public bool IsPressed;
+		public Vector3 Position;
 		public ButtonPlanningState(ButtonLogic button)
 		{
 			Name = button.gameObject.name;
 			IsPressed = button.IsPressed;
+			Position = button.transform.position;
 		}
 
 		public ButtonPlanningState(string name, bool isPressed)
