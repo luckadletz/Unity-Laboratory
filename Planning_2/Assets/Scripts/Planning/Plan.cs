@@ -4,27 +4,30 @@ using System.Collections.Generic;
 using Planning;
 using UnityEngine;
 
-public class Plan
+namespace Planning
 {
-	private Queue<Step> Actions;
-
-	public Plan(IList<Step> actions)
+	public class Plan
 	{
-		Actions = new Queue<Step>(actions);
-	}
+		private Queue<Step> Actions;
 
-	public int Count { get { return Actions.Count; } }
-
-	public bool Step(Agent agent)
-	{
-		if (Actions.Count == 0) return true;
-
-		bool done = Actions.Peek().Action(agent);
-		if (done)
+		public Plan(IList<Step> actions)
 		{
-			Actions.Dequeue();
+			Actions = new Queue<Step>(actions);
 		}
-		return Actions.Count == 0;
-	}
 
+		public int Count { get { return Actions.Count; } }
+
+		public bool Step()
+		{
+			if (Actions.Count == 0) return true;
+
+			bool done = Actions.Peek().Action();
+			if (done)
+			{
+				Actions.Dequeue();
+			}
+			return Actions.Count == 0;
+		}
+
+	}
 }

@@ -7,15 +7,10 @@ using UnityEngine;
 
 namespace Planning
 {
-	public class Agent
+	public class PlanFinder
 	{
 		public delegate IList<Step> RefreshActionsCallback(World possible);
 		public delegate void RefreshWorldCallback(World possible);
-
-		public RefreshActionsCallback RefreshActions = null;
-		public RefreshWorldCallback RefreshWorld = null;
-
-		public string Name; // Should be unique, TODO use for data indexing
 
 		public Plan MakePlan( 
 			World current, IGoal goal,

@@ -13,20 +13,32 @@ namespace Planning
 		public World Expected { get; protected set; }
 
 		// Returns true when finished, false to run again next frame
-		public abstract bool Action(Agent agent);
+		public abstract bool Action();
 	}
 
-	public class NoopStep : Step
+	public class MessageStep : Step
 	{
-		public NoopStep(float cost, World expected)
+		protected GameObject Target;
+		protected string Message;
+
+		// The bool returned after the message is sent
+		public bool CompletedAfterCall = true;
+
+		public MessageStep(GameObject target, 
+			string message, 
+			float cost, 
+			World expected)
 		{
-			Cost = cost;
+			Target = target;
 			Expected = expected;
+			Message = message;
+			Cost = cost;
 		}
 
-		public override bool Action(Agent agent)
+		public override bool Action()
 		{
-			return true;
+			Target.SendMessage(Message);
+			return CompletedAfterCall;
 		}
 	}
 

@@ -97,17 +97,17 @@ public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 		{
 			Button = button;
 			Agent = agent;
-			Cost = 1.0f; // Distance from agent (how do we know agent?)
+			Cost = 1.0f; // Distance from agent? Time?
 
-			Expected = world.Step(); // Make a lazy copy here
+			Expected = world.Step(); // Make a deep copy here?
 			var results = Expected.GetState(button.gameObject.name) as ButtonPlanningState;
 			results.IsPressed = true;
 		}
 
-		public override bool Action(Agent agent)
+		public override bool Action()
 		{
-			Debug.Log(agent.Name + " wants to press " + Button.name);
-			// UNDONE actor.GetComponent<NavMeshAgent>().SetDestination(Button.transform.position);
+			Debug.Log(Agent.gameObject.name + " wants to press " + Button.name);
+			Agent.GetComponent<NavMeshAgent>().SetDestination(Button.transform.position);
 			return Button.IsPressed;
 		}
 	}
