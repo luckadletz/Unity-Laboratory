@@ -19,9 +19,6 @@ namespace Planning
 			worldRefresh(current);
 			PlanTree tree = new PlanTree(start: current);
 
-			Debug.Log("Current" + current);
-			Debug.Log("Goal" + goal);
-
 			while(!tree.IsEmpty())
 			{
 				// Select the endpoint of the easiest plan we have

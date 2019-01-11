@@ -21,7 +21,8 @@ namespace Planning
 
 		void Start()
 		{
-
+			// Hardcode goal
+			goal.Expected.SetState(new ButtonLogic.ButtonPlanningState("Goal", true));
 		}
 
 		void Update()
@@ -39,6 +40,7 @@ namespace Planning
 				if (done)
 				{
 					Debug.Log("Done!");
+					this.enabled = false;
 				}
 			}
 		}
@@ -66,7 +68,6 @@ namespace Planning
 				if (source.GetComponent(typeof(IActionSource)))
 				{
 					source.SendMessage("ApplyCurrentState", current);
-					Debug.Log("Building: " + current);
 				}
 			}
 
@@ -89,7 +90,6 @@ namespace Planning
 				if (source.GetComponent(typeof(IStateSource)))
 				{
 					source.SendMessage("UpdateState", possible);
-					Debug.Log("Updating: " + possible);
 				}
 			}
 

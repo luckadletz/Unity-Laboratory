@@ -37,8 +37,6 @@ namespace Planning
 			Debug.Log("Checking " + expectations + " against " + this);
 			foreach (var expectation in expectations.States)
 			{
-				Debug.Log("Checking state: " + expectation.Value);
-
 				if(!HasState(expectation.Key))
 				{
 					Debug.Log("no state");
@@ -51,8 +49,6 @@ namespace Planning
 					Debug.Log(current + " does not match " + expectation.Value);
 					return false;
 				}
-				
-				Debug.Log(current + " matches" + expectation.Value);
 			}
 			return true;
 		}
