@@ -6,7 +6,14 @@ using UnityEngine.AI;
 
 public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 {
+	[Plannable]
 	public bool IsPressed = false;
+
+	[Plannable]
+	public Vector3 Position
+	{
+		get { return transform.position; }
+	}
 
 	public Vector3 PressedOffset = new Vector3(0.0f, -1.0f, 0.0f);
 
@@ -24,7 +31,7 @@ public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 		ButtonPlanningState buttonState = world.GetState(gameObject.name) as ButtonPlanningState;
 		Vector3 buttonPos = transform.position; // If button can move, this must be in world
 
-		if(!buttonState.IsPressed && agent.CanPath(world, buttonState.Position))
+		if (!buttonState.IsPressed && agent.CanPath(world, buttonState.Position))
 		{
 			Step act = new PressButtonStep(this, agent, world);
 			actions.Add(act);
@@ -80,7 +87,7 @@ public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 		{
 			ButtonPlanningState otherButton = other as ButtonPlanningState;
 
-			if(otherButton == null)
+			if (otherButton == null)
 			{
 				// Maybe log that you're comparing a state of a different type?
 				// Maybe handle this logic in base class, and rely on IEquatable in most cases (neat!)
@@ -129,6 +136,9 @@ public class ButtonLogic : MonoBehaviour, IActionSource, IStateSource
 	// Use this for initialization
 	void Start()
 	{
+
+		var state = new State<ButtonLogic>(this);
+
 		if (IsPressed)
 		{
 			PressedPosition = transform.position;
