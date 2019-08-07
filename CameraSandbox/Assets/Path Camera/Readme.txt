@@ -1,0 +1,1 @@
+A camera that can pathfind in 3D, as well as picking locations optimized for visibility.
