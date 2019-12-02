@@ -1,0 +1,20 @@
+﻿/* === Copyright Luc Kadletz 2019 === */	
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #SCRIPTNAME# : BaseBehavior
+{
+
+	void Start() 
+	{
+		#NOTRIM#
+	}
+	
+	void Update() 
+	{
+		#NOTRIM#
+	}
+
+}
